@@ -1,13 +1,22 @@
-
 #!/usr/bin/env bash
 set -e
 # set -x
 
-# Repair broken PDF file
+################################################################################
+# Repair broken PDFs, processing directorys with GNU Parallel
 #
-# Parameter :
-#   $1 - single PDF or a folder of multiple PDFs
+# Usage:
+#   repair_pdf.sh [-v] file_or_directory
 #
+# Arguments:
+#   -v or --verbose: TODO, not yet implemented
+# 
+#   NB: -it is not working, use -i -t
+#
+# Please report issues at https://github.com/jfilter/pdf-scripts/issues
+#
+# GPLv3, Copyright (c) 2020 Johannes Filter
+################################################################################
 
 command_exists () {
   if ! [ -x `$(command -v $1 &> /dev/null)` ]; then
@@ -24,11 +33,23 @@ clean_pdf () {
   cp $1 $tmp
   mutool clean $tmp $tmp
 
-  # sometimes pdftocairo files but the file is still working
+  # convert to PDF with pdftocairo (which is using poppler)
   if pdftocairo -pdf $tmp $tmp.2; then
     mv $tmp.2 $tmp
   else
-    echo "pdftocairo had a problem"
+    qpdf --clean $tmp
+    if pdftocairo -pdf $tmp $tmp.2; then
+      mv $tmp.2 $tmp
+    else
+      # gs is last resort, because it may alter the PDF
+      gs -o $tmp.2 -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress $tmp &&
+      pdftocairo -pdf $tmp.2 $tmp
+
+      if (($? != 0)); then
+        echo "gs + pdftocairo had a problem, file it srsly broken"
+        echo $1
+      fi
+    fi
   fi
 
   # only decrypt files it's needed
@@ -53,4 +74,3 @@ else
   echo "error: please provide some valid input file(s)"
   exit 1
 fi
-

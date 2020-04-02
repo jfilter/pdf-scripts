@@ -1,12 +1,18 @@
 # PDF Scripts
 
-## repair-pdf
+Scripts to repair, verify, OCR (etc.) PDFs.
 
-Scripts to repair & verify PDFs.
+## `repair_pdf.sh`
 
 - `pdftocairo` from [poppler](<https://en.wikipedia.org/wiki/Poppler_(software)>)
 - `mutool clean` from [MuPDF](https://en.wikipedia.org/wiki/MuPDF)
 - `qpdf` from [QDF](https://en.wikipedia.org/wiki/QPDF)
+
+## `verify_pdf.sh`
+
+- `qpdf --check`
+- `pdfinfo`
+- `pdftotext`
 
 ### Related Work
 
@@ -14,4 +20,4 @@ Scripts to repair & verify PDFs.
 
 ## License
 
-MIT.
+GPLv3.
