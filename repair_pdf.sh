@@ -6,7 +6,7 @@ set -e
 # Repair broken PDFs, processing directorys with GNU Parallel
 #
 # Usage:
-#   repair_pdf.sh [-v] file_or_directory
+#   bash repair_pdf.sh [-v] file_or_directory
 #
 # Arguments:
 #   -v or --verbose: TODO, not yet implemented

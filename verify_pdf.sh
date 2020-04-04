@@ -6,7 +6,7 @@ set -e
 # Verify integrity of PDFs, processing directorys with GNU Parallel
 #
 # Usage:
-#   verify_pdf.sh [-i] [-t] [-q] file_or_directory
+#   bash verify_pdf.sh [-i] [-t] [-q] file_or_directory
 #
 # Arguments:
 #   -i or --info: check pdf with `pdfinfo`, general fast check
