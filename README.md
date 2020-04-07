@@ -1,6 +1,6 @@
 # PDF Scripts
 
-Scripts to repair, verify, OCR (etc.) PDFs.
+Scripts to repair, verify, OCR (etc.) PDFs. It still WIP so use it with care.
 
 ## `repair_pdf.sh`
 

@@ -9,7 +9,7 @@ set -e
 #   bash is_scanned_pdf.sh [-p] file
 #
 #   Exit 0: Yes, file is a scanned PDF
-#   Exit 1: No, file was created digitally
+#   Exit 99: No, file was created digitally
 #
 # Arguments:
 #   -p or --pages: pos. integer, only consider first N pages 
@@ -42,7 +42,7 @@ command_exists mutool && command_exists gs && command_exists compare
 command_exists pdfinfo
 
 orig=$PWD
-num_pages=$(pdfinfo $PWD/$1 | grep Pages | awk '{print $2}')
+num_pages=$(pdfinfo $1 | grep Pages | awk '{print $2}')
 
 echo $num_pages
 
@@ -59,7 +59,7 @@ for ((i=1;i<=num_pages;i++)); do
 done
 
 # important to filter text on output of GS (tmp1), cuz GS alters input PDF...
-gs -o tmp1.pdf -sDEVICE=pdfwrite -dLastPage=$num_pages $orig/$1 &>/dev/null
+gs -o tmp1.pdf -sDEVICE=pdfwrite -dLastPage=$num_pages $1 &>/dev/null
 gs -o tmp2.pdf -sDEVICE=pdfwrite -dFILTERTEXT tmp1.pdf &>/dev/null
 mutool convert -o output/%d/1.png tmp1.pdf 2>/dev/null
 mutool convert -o output/%d/2.png tmp2.pdf 2>/dev/null
@@ -70,6 +70,6 @@ for ((i=1;i<=num_pages;i++)); do
   # discard diff image
   if ! compare -metric AE output/$i/1.png output/$i/2.png null: 2>&1; then
     echo " pixels difference, not a scanned PDF, mismatch on page $i"
-    exit 1
+    exit 99
   fi
 done
