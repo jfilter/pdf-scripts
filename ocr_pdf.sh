@@ -9,7 +9,7 @@ set -x
 # parse arguments
 # h/t https://stackoverflow.com/a/33826763/4028896
 
-optimize=1 && force_ocr=0 && clean=0 && dpi=-1
+optimize=1 && force_ocr=0 && clean=0 && args=""
 
 # not all languages are supported with the Docker image
 # https://ocrmypdf.readthedocs.io/en/latest/docker.html#adding-languages-to-the-docker-image
@@ -36,7 +36,7 @@ while [[ "$#" -gt 1 ]]; do
     lang="$2"
     shift
     ;;
-  -d | --dpi)
+  -a | --args)
     dpi="$2"
     shift
     ;;
@@ -49,6 +49,7 @@ while [[ "$#" -gt 1 ]]; do
   shift
 done
 
+# in $7 are the remaining args
 do_ocr() {
   tmpdir=$(mktemp -d)
   cp $1 $tmpdir/
@@ -71,17 +72,12 @@ do_ocr() {
     clean_txt="--remove-background --clean-final"
   fi
 
-  dpi_txt=""
-  if (($7 > 0)); then
-    dpi_txt="--oversample $7"
-  fi
-
   opt="$3"
   if (($opt == 3)); then
     opt="3 --jbig2-lossy"
   fi
 
-  docker run --rm -v "$tmpdir:/data" jbarlow83/ocrmypdf -l $6 --pdf-renderer hocr --output-type pdf --clean $force_txt $clean_txt $dpi_txt --optimize $opt /data/$fn /data/$fn.out.pdf && mv -f $tmpdir/$fn.out.pdf $2/$fn
+  docker run --rm -v "$tmpdir:/data" jbarlow83/ocrmypdf -l $6 --pdf-renderer hocr --output-type pdf --tesseract-timeout=0 --clean $force_txt $clean_txt $7 --optimize $opt /data/$fn /data/$fn.out.pdf && mv -f $tmpdir/$fn.out.pdf $2/$fn
 }
 
 full_path="$PWD/$1"
@@ -91,11 +87,11 @@ mkdir -p $PWD/out
 if [[ -d full_path ]]; then
   # directory of PDFs, need to create tmp file to store all args
   for f in $full_path/*.pdf; do
-    do_ocr $f $PWD/out $optimize $force_ocr $clean $lang $dpi
+    do_ocr $f $PWD/out $optimize $force_ocr $clean $lang $args
   done
 elif [[ -f $full_path ]]; then
   # single pdf
-  do_ocr $full_path $PWD/out $optimize $force_ocr $clean $lang $dpi
+  do_ocr $full_path $PWD/out $optimize $force_ocr $clean $lang $args
 else
   echo "error: please provide some valid input file(s)"
   exit 1
