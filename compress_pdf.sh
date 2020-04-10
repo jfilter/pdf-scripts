@@ -1,74 +1,84 @@
 #!/usr/bin/env bash
+set -e
 
-# Compress PDF files to smaller size.
+################################################################################
+# Compress images in PDFs with GhostScript.
+# Information about the 5 level of compression:https://askubuntu.com/a/256449
+#
+# Built upon work by Erik Westrup: https://github.com/erikw/dotfiles/blob/personal/bin/pdf_compress.sh
+#
+# Usage:
+#   bash compress_pdf.sh [-l] input.pdf output.pdf
+#
+# Arguments:
+#   -l or --level: level of compression (1-5), the higher the harder
+#                  the compression. Defaults to 4.
+#
+# Please report issues at https://github.com/jfilter/pdf-scripts/issues
+#
+# GPLv3, Copyright (c) 2020 Johannes Filter
+################################################################################
 
-# via: https://github.com/erikw/dotfiles/blob/personal/bin/pdf_compress.sh
-# Inspired by: https://askubuntu.com/questions/113544/how-can-i-reduce-the-file-size-of-a-scanned-pdf-file
+level=4
+while [[ "$#" -gt 2 ]]; do
+	case $1 in
+	-l | --level)
+		level="$2"
+		shift
+		;;
+	*)
+		echo "Unknown parameter passed: $1"
+		exit 1
+		;;
+	esac
+	shift
+done
 
 get_file_size() {
 	file="$1"
-	du -h "$file" | awk '{print $1}'
+	du "$file" | awk '{print $1}'
 }
 
 compress_pdf() {
-	pdf_input="$1"
-	pdf_settings="$2"
-	replace="$3"
+	case "$3" in
+	1)
+		compression_setting="default"
+		;;
+	2)
+		compression_setting="printer"
+		;;
+	3)
+		compression_setting="prepress"
+		;;
+	4)
+		compression_setting="ebook"
+		;;
+	5)
+		compression_setting="screen"
+		;;
+	*)
+		echo "Choose a number between 1 and 5"
+		exit 1
+		;;
+	esac
 
-	basename=${1%%.pdf}
-	pdf_output="${basename}_compressed.pdf"
-
-	gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/${pdf_settings} -dNOPAUSE -dQUIET -dBATCH -sOutputFile=${pdf_output} ${pdf_input}
+	gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 \
+		-dPDFSETTINGS=/${compression_setting}-dNOPAUSE -dQUIET -dBATCH \
+		-sOutputFile=$1.tmp $1
 	if [ "$?" -ne 0 ]; then
 		echo "Failed to compress input PDF." >&2 && exit 2
 	fi
 
-	size_before=$(get_file_size "$pdf_input")
-	size_after=$(get_file_size "$pdf_output")
+	size_before=$(get_file_size $1)
+	size_after=$(get_file_size $1.tmp)
 
-	if [ "$replace" = true ]; then
-		mv "${pdf_output}" "${pdf_input}"
-		ftype="original"
+	if ((size_before < size_aft)); then
+		echo "size increased, aborting. before: $size_before after: $size_after"
+		rm $1.tmp
 	else
-		ftype="copy"
+		mv $1.tmp $2
+		echo "size reduced from $size_before to $size_after"
 	fi
-
-	printf "Compressed %s from %s to %s at: %s\n" $ftype $size_before $size_after "$pdf_output"
-	test $replace = true || printf "> Replace with:\nmv %s %s\n" "$pdf_output" "$pdf_input"
 }
 
-scriptname=${0##*/}
-usage="Usage: ${scriptname} [-r] [-s [default|screen*|ebook|prepress|printer]] <pdf>"
-
-pdf_settings=screen
-replace=false
-while getopts ":rs:h?" opt; do
-	case "$opt" in
-	r) replace=true ;;
-	s)
-		case "$OPTARG" in
-		default | screen* | ebook | prepress | printer) pdf_settings="$OPTARG" ;;
-		*) echo "Invalid pdf settings" >&2 && exit 1 ;;
-		esac
-		;;
-	:)
-		echo "Option -$OPTARG requires an argument." >&2
-		exit 1
-		;;
-	h | ? | *)
-		echo "$usage"
-		exit 0
-		;;
-	esac
-done
-shift $(($OPTIND - 1))
-
-if [ "$#" -lt 1 ]; then
-	echo "Mising PDFs to compress" 2>/dev/null
-	exit 1
-fi
-pdfs="$*"
-
-for pdf in $pdfs; do
-	compress_pdf "$pdf" "$pdf_settings" $replace
-done
+compress_pdf $1 $2 $level
