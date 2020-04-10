@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -x
 
 ################################################################################
 # Compress images in PDFs with GhostScript.
@@ -39,6 +40,7 @@ get_file_size() {
 	du "$file" | awk '{print $1}'
 }
 
+# TODO: is default really level 1? Or should it be level 2?
 compress_pdf() {
 	case "$3" in
 	1)
@@ -63,7 +65,7 @@ compress_pdf() {
 	esac
 
 	gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 \
-		-dPDFSETTINGS=/${compression_setting}-dNOPAUSE -dQUIET -dBATCH \
+		-dPDFSETTINGS=/${compression_setting} -dNOPAUSE -dQUIET -dBATCH \
 		-sOutputFile=$1.tmp $1
 	if [ "$?" -ne 0 ]; then
 		echo "Failed to compress input PDF." >&2 && exit 2
@@ -73,8 +75,8 @@ compress_pdf() {
 	size_after=$(get_file_size $1.tmp)
 
 	if ((size_before < size_aft)); then
-		echo "size increased, aborting. before: $size_before after: $size_after"
 		rm $1.tmp
+		echo "size increased, aborting. before: $size_before after: $size_after"
 	else
 		mv $1.tmp $2
 		echo "size reduced from $size_before to $size_after"

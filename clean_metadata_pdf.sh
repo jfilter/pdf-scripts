@@ -44,6 +44,6 @@ exiftool -all= $1
 # set only the most important
 exiftool -Title=$title -Author=$author $1
 
-# exitool only adds new data, but does not remove all one. The following command
+# exitool only adds new data, but does not remove old one. The following command
 # fixes the PDF ultimately.
 qpdf --linearize $1 $1.tmp && mv $1.tmp $1

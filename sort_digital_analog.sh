@@ -2,7 +2,7 @@
 set -e
 set -x
 
-# still WIP
+# still WIP, assumes 'analog' PDFs were already OCRd
 
 dir_path=$(dirname $0)
 

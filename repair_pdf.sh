@@ -36,6 +36,7 @@ clean_pdf() {
   if pdftocairo -pdf $tmp $tmp.2; then
     mv $tmp.2 $tmp
   else
+    # TODO: --clean by itself does not alter the PDF, how to convert with qpdf?
     qpdf --clean $tmp
     if pdftocairo -pdf $tmp $tmp.2; then
       mv $tmp.2 $tmp
@@ -59,16 +60,22 @@ clean_pdf() {
   mv $tmp $1
 }
 
-if [[ -d $PWD/$1 ]]; then
+if [[ $1 == /* ]]; then
+  input=$1
+else
+  input=$PWD/$1
+fi
+
+if [[ -d $input ]]; then
   # directory of PDFs
-  command_exists parallel &&
-    export -f clean_pdf &&
-    ALL_PDFS=$(mktemp) &&
-    for f in $PWD/$1/*.pdf; do echo $f >>$ALL_PDFS; done &&
-    cat "${ALL_PDFS}" | parallel --bar clean_pdf
-elif [[ -f $PWD/$1 ]]; then
+  command_exists parallel
+  export -f clean_pdf
+  ALL_PDFS=$(mktemp)
+  for f in $input/*.pdf; do echo $f >>$ALL_PDFS; done
+  cat "${ALL_PDFS}" | parallel --bar clean_pdf
+elif [[ -f $input ]]; then
   # single pdf
-  clean_pdf $PWD/$1
+  clean_pdf $input
 else
   echo "error: please provide some valid input file(s)"
   exit 1
