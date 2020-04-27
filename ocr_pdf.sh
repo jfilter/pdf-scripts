@@ -51,7 +51,12 @@ done
 
 # in $7 are the remaining args
 do_ocr() {
-  tmpdir=$(mktemp -d)
+  # macOS command is different
+  if [ "$(uname)" == "Darwin" ]; then
+    tmpdir=$(mktemp -d /tmp/foo.XXXXXXXXXX)
+  else
+    tmpdir=$(mktemp -d)
+  fi
   cp $1 $tmpdir/
   fn=$(basename -- "$1")
   echo $fn
@@ -77,7 +82,7 @@ do_ocr() {
     opt="3 --jbig2-lossy"
   fi
 
-  docker run --rm -v "$tmpdir:/data" jbarlow83/ocrmypdf -l $6 --pdf-renderer hocr --output-type pdf --tesseract-timeout=0 --clean $force_txt $clean_txt $7 --optimize $opt /data/$fn /data/$fn.out.pdf && mv -f $tmpdir/$fn.out.pdf $2/$fn
+  docker run --rm -v "$tmpdir:/data" jbarlow83/ocrmypdf -l $6 --pdf-renderer hocr --output-type pdf --clean $force_txt $clean_txt $7 --optimize $opt /data/$fn /data/$fn.out.pdf && mv -f $tmpdir/$fn.out.pdf $2/$fn
 }
 
 full_path="$PWD/$1"
