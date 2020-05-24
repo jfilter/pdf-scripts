@@ -3,7 +3,7 @@ import argparse
 from pdflib import Document
 
 parser = argparse.ArgumentParser(
-    description="checks of presence of absende of text on images"
+    description="checks for presence of absence of text on images"
 )
 parser.add_argument("input_files", type=str, nargs="+", help="path to a PDF")
 parser.add_argument(
