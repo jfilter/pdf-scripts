@@ -4,11 +4,6 @@ set -e
 
 # still WIP, very opiniated
 
-# not sure what --dpi does
-
-# parse arguments
-# h/t https://stackoverflow.com/a/33826763/4028896
-
 optimize=1 && force_ocr=0 && clean=0 && args=""
 
 # not all languages are supported with the Docker image
@@ -21,7 +16,10 @@ optimize=1 && force_ocr=0 && clean=0 && args=""
 # chi_sim - Chinese simplified
 lang="eng"
 
+# parse arguments
+# h/t https://stackoverflow.com/a/33826763/4028896
 # skip over positional argument of the file(s), thus -gt 1
+
 while [[ "$#" -gt 1 ]]; do
   case $1 in
   -o | --optimize)
@@ -85,7 +83,11 @@ do_ocr() {
   docker run --rm -v "$tmpdir:/data" jbarlow83/ocrmypdf -l $6 --pdf-renderer hocr --output-type pdf --clean $force_txt $clean_txt $7 --optimize $opt /data/$fn /data/$fn.out.pdf && mv -f $tmpdir/$fn.out.pdf $2/$fn
 }
 
-full_path="$PWD/$1"
+if [[ $1 == /* ]]; then
+  full_path=$1
+else
+  full_path=$PWD/$1
+fi
 
 mkdir -p $PWD/out
 
