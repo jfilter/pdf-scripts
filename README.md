@@ -22,10 +22,12 @@ Scripts to repair, verify, OCR (etc.) PDFs. It still WIP so use it with care.
 
 ## Development
 
-- focus on Bash, don't aim to support lower versions of Bash
+- focus on Bash, don't aim to support lower versions of Bash (so assume Bash v4 is available)
+- Write Python 3.6+ scripts if Bash gets too complicated
+- use Docker images if available
 - should run on the major Unix-like OSs (Linux (e.g. Ubuntu), macOS)
 - format code with [shfmt](https://github.com/mvdan/sh#shfmt), e.g., extension for [VS Code](https://github.com/foxundermoon/vs-shell-format)
-- use Docker images if available
+- lint scripts with [shellcheck](https://github.com/koalaman/shellcheck), e.g., extension for [VS Code](https://github.com/timonwong/vscode-shellcheck)
 
 ## License
 
