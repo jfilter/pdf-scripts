@@ -41,7 +41,7 @@ while [[ "$#" -gt 1 ]]; do
 done
 
 # default: enable all
-if ((($do_info + $do_text + $do_qpdf) == 0)); then
+if (((do_info + do_text + do_qpdf) == 0)); then
   do_info=1 && do_text=1 && do_qpdf=1
 fi
 
@@ -76,9 +76,9 @@ check_qpdf() {
 
 echo "-----------------------"
 echo "checking PDFs with..."
-(($do_info == 1)) && echo "pdfinfo" && command_exists pdfinfo
-(($do_text == 1)) && echo "pdftotext" && command_exists pdftotext
-(($do_qpdf == 1)) && echo "qpdf" && command_exists qpdf
+((do_info == 1)) && echo "pdfinfo" && command_exists pdfinfo
+((do_text == 1)) && echo "pdftotext" && command_exists pdftotext
+((do_qpdf == 1)) && echo "qpdf" && command_exists qpdf
 echo "-----------------------"
 
 # $1 is the file and the following arguments the options
@@ -88,17 +88,23 @@ check() {
   (($4 == 1)) && check_qpdf $1
 }
 
-if [[ -d $PWD/$1 ]]; then
+if [[ $1 == /* ]]; then
+  input=$1
+else
+  input=$PWD/$1
+fi
+
+if [[ -d $input ]]; then
   # directory of PDFs, need to create tmp file to store all args
   command_exists parallel &&
     export -f check && export -f check_pdfinfo && export -f check_pdftotext &&
     export -f check_qpdf &&
     ALL_PDFS=$(mktemp) &&
-    for f in $PWD/$1/*.pdf; do echo $f >>$ALL_PDFS; done &&
+    for f in "$input"/*.pdf; do echo $f >>$ALL_PDFS; done &&
     parallel --bar check :::: "${ALL_PDFS}" ::: $do_info ::: $do_text ::: $do_qpdf
-elif [[ -f $PWD/$1 ]]; then
+elif [[ -f $input ]]; then
   # single pdf
-  check $PWD/$1 $do_info $do_text $do_qpdf
+  check "$input" $do_info $do_text $do_qpdf
 else
   echo "error: please provide some valid input file(s)"
   exit 1

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-set -x
+# set -x
 
 # set correct file permissions https://stackoverflow.com/a/28993800/4028896
 # normalize filenames with detox https://github.com/dharple/detox
