@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-# set -x
+set -x
 
 ################################################################################
 # Repair broken PDFs, processing directorys with GNU Parallel
@@ -11,7 +11,6 @@ set -e
 # Arguments:
 #   -v or --verbose: TODO, not yet implemented
 #
-#   NB: -it is not working, use -i -t
 #
 # Please report issues at https://github.com/jfilter/pdf-scripts/issues
 #

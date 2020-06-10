@@ -11,7 +11,7 @@ set -x
 # Arguments:
 #   -l or --language: language for OCR, defaults to `eng`
 #   -o or --optimize: level of file optimization, 0 to deactivate size optimization
-#                     1-3 to choose level, 3 is currently broken/experimental
+#                     1 should optimize without harm, 2 and 3 are compression the files harder
 #
 # Please report issues at https://github.com/jfilter/pdf-scripts/issues
 #
@@ -54,11 +54,7 @@ bash ocr_pdf.sh -l "$lang" -o $optimize "$input"
 
 if ((optimize > 0)); then
   echo '4. reduce file size'
-  if ((optimize == 3)); then
-    bash reduce_size_pdf.sh -l 4 "$input"
-  else
-    bash reduce_size_pdf.sh -l 3 "$input"
-  fi
+  bash reduce_size_pdf.sh -l $((optimize+1)) "$input"
 fi
 
 echo '5. verify PDF'

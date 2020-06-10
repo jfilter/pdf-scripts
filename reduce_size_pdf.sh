@@ -1,8 +1,21 @@
 #!/usr/bin/env bash
 set -e
-set -x
+# set -x
 
-# still WIP
+################################################################################
+# Reduce PDF file size by compression and optimsation
+#
+# Usage:
+#   bash reduce_file_size.sh [-l] file_or_directory
+#
+# Arguments:
+#   -l or --level: level of compression (1-5), the higher the harder
+#                  the compression. Defaults to 3.
+#
+# Please report issues at https://github.com/jfilter/pdf-scripts/issues
+#
+# GPLv3, Copyright (c) 2020 Johannes Filter
+################################################################################
 
 level=3
 while [[ "$#" -gt 2 ]]; do
@@ -19,7 +32,7 @@ while [[ "$#" -gt 2 ]]; do
   shift
 done
 
-dir_path=$(dirname $0)
+dir_path=$(dirname "$0")
 
 if [[ $1 == /* ]]; then
   input=$1
@@ -33,19 +46,19 @@ reduce() {
     "$2"/compress_pdf.sh -l $level "$1"
   fi
 
-  # 2. --use-pngout=no to speed things up
+  # 2. reduce PDF size, --use-pngout=no to speed things up
   tmpdir=$(mktemp -d)
-  cp $1 $tmpdir/
+  cp "$1" "$tmpdir"/
   fn=$(basename -- "$1")
-  docker run --rm -v "$tmpdir:/workdir" -u "$(id -u):$(id -g)" ptspts/pdfsizeopt pdfsizeopt --use-pngout=no $fn $fn.tmp
-  mv -f $tmpdir/$fn.tmp $1
+  docker run --rm -v "$tmpdir:/workdir" -u "$(id -u):$(id -g)" ptspts/pdfsizeopt pdfsizeopt --use-pngout=no "$fn" "$fn".tmp
+  mv -f "$tmpdir"/"$fn".tmp "$1"
 }
 
 if [[ -d $input ]]; then
   export -f reduce
   ALL_PDFS=$(mktemp)
-  for f in "$input"/*.pdf; do echo $f >>$ALL_PDFS; done
-  parallel --bar reduce :::: "${ALL_PDFS}" ::: $dir_path
+  for f in "$input"/*.pdf; do echo "$f" >> "$ALL_PDFS"; done
+  parallel --bar reduce :::: "${ALL_PDFS}" ::: "$dir_path"
 elif [[ -f $input ]]; then
   # single pdf
   reduce "$input" "$dir_path"
