@@ -1,28 +1,50 @@
 # PDF Scripts
 
-Scripts to repair, verify, OCR (etc.) PDFs. It still WIP so use it with care.
+Scripts to repair, verify, OCR, compress (etc.) PDFs.
 
-## Scripts included
+## Overview
 
 ### [repair_pdf.sh](./repair_pdf.sh)
 
-- `pdftocairo` from [poppler](<https://en.wikipedia.org/wiki/Poppler_(software)>)
-- `mutool clean` from [MuPDF](https://en.wikipedia.org/wiki/MuPDF)
-- `qpdf` from [QDF](https://en.wikipedia.org/wiki/QPDF)
+Using: `pdftocairo` from [poppler](<https://en.wikipedia.org/wiki/Poppler_(software)>), `mutool clean` from [MuPDF](https://en.wikipedia.org/wiki/MuPDF), [qpdf](https://en.wikipedia.org/wiki/QPDF)
 
-#### Related Work
+Caveat: May remove OCR.
 
-- https://github.com/NicolasBernaerts/ubuntu-scripts/blob/master/pdf/pdf-repair
+Related Work: https://github.com/NicolasBernaerts/ubuntu-scripts/blob/master/pdf/pdf-repair
 
 ### [verify_pdf.sh](./verify_pdf.sh)
 
-- `qpdf --check`
-- `pdfinfo`
-- `pdftotext`
+Checks if text can be extracted (if it's already on the PDF)
+
+### [compress_pdf.sh](./compress_pdf.sh)
+
+Using ghoscript to compress images in PDFs.
+
+### [reduce_size_pdf.sh](reduce_size_pdf.sh)
+
+Use [compress_pdf.sh](./compress_pdf.sh) but also [pdfsizeopt](https://github.com/pts/pdfsizeopt) to reduze file size of PDFs.
+
+### [ocr_pdf](./ocr_pdf.sh)
+
+OCR PDFs with [OCRmyPDF](https://github.com/jbarlow83/OCRmyPDF).
+
+### [clean_metadata_pdf.sh](clean_metadata_pdf.sh)
+
+Remove metadata with [exiftool](https://exiftool.org/).
+
+### [pipeline.sh](./repair_pdf.sh)
+
+Combining several of the above scripts.
+
+Caveat: Right now the 'repair' step occasionally removes the OCR is available.
+
+### [is_ocrd_pdf.sh](is_ocrd_pdf.sh)
+
+Detect OCRd PDFs. See also [sort_ocrd_pdfs.sh](sort_ocrd_pdfs.sh) to sort PDFs.
 
 ## Development
 
-- focus on Bash, don't aim to support lower versions of Bash (so assume Bash v4 is available)
+- focus on Bash v4+
 - Write Python 3.6+ scripts if Bash gets too complicated
 - use Docker images if available
 - should run on the major Unix-like OSs (Linux (e.g. Ubuntu), macOS)

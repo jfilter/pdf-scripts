@@ -3,7 +3,7 @@ set -e
 # set -x
 
 ################################################################################
-# Check if a PDF was scanned or created digitally, works on OCRd PDFs
+# Check if a PDF was a scanned (image PDF) and already OCRd
 #
 # Usage:
 #   bash is_ocrd_pdf.sh [-p] file
