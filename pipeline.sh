@@ -47,7 +47,7 @@ echo '1. normalizing files'
 bash utils/normalize_files.sh "$input"
 
 echo '2. repairing pdfs'
-bash repair_pdf.sh "$input"
+bash repair_pdf.sh -c "$input"
 
 echo '3. ocr PDFs'
 bash ocr_pdf.sh -l "$lang" -o $optimize "$input"

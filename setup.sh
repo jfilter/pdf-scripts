@@ -16,7 +16,7 @@ if [ "$(uname)" == "Darwin" ]; then
   command_exists brew
   command_exists docker
 
-  brew install parallel ghostscript mupdf-tools qpdf poppler detox exiftool
+  brew install parallel ghostscript mupdf-tools qpdf poppler detox exiftool imagemagick
 fi
 
 # for centos
@@ -28,5 +28,5 @@ fi
 # for ubuntu
 if [ -f /etc/lsb-release ]; then
   # not sure, TODO
-  apt-get update && apt-get install -y parallel ghostscript mupdf-tools qpdf poppler-utils detox libimage-exiftool-perl docker.io
+  apt-get update && apt-get install -y parallel ghostscript mupdf-tools qpdf poppler-utils detox libimage-exiftool-perl imagemagick docker.io
 fi
