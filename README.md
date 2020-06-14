@@ -2,6 +2,8 @@
 
 Scripts (mostly Bash) to repair, verify, OCR, compress (etc.) PDFs.
 
+*Currently in beta status, so except backward-incompatible changes.*
+
 ## Install
 
 You need to have [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) installed.
@@ -30,7 +32,6 @@ Using: `pdftocairo` from [poppler](<https://en.wikipedia.org/wiki/Poppler_(softw
 
 Caveat: May remove text in OCRd PDFs. Use `--check` to check for OCRd text in order to preserve it.
 
-Related Work: https://github.com/NicolasBernaerts/ubuntu-scripts/blob/master/pdf/pdf-repair
 
 ### [verify_pdf.sh](./verify_pdf.sh)
 
@@ -55,6 +56,19 @@ Detect OCRd PDFs. See also [sort_ocrd_pdfs.sh](sort_ocrd_pdfs.sh) to sort PDFs.
 ### [pipeline.sh](./pipeline.sh)
 
 Combining several of the above scripts.
+
+## FAQ
+
+### Why Bash?
+
+Bash is still the most-used shell. And the scipts comprise mostly of simple conditionals and sequences of CLI commands. This could also be done with Python's `psutil` but this would add yet another layer. However, at some point, I most probable port the scripts to simple POSIX-Shell.
+
+## Related Work
+
+- https://dangerzone.rocks/
+- https://0xacab.org/jvoisin/mat2
+- https://github.com/NicolasBernaerts/ubuntu-scripts/blob/master/pdf/pdf-repair
+- https://scantailor.org/ (unmantained)
 
 ## Development
 
