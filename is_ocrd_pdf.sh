@@ -13,6 +13,7 @@ set -e
 #
 # Arguments:
 #   -p or --pages: pos. integer, only consider first N pages
+#   -t or --tolernace: tolernace in % to consider pixels the same, defaults to 0
 #
 # Please report issues at https://github.com/jfilter/pdf-scripts/issues
 #
@@ -22,11 +23,16 @@ set -e
 # parse arguments
 # h/t https://stackoverflow.com/a/33826763/4028896
 max_pages=-1
+tolerance=0
 # skip over positional argument of the file(s), thus -gt 1
 while [[ "$#" -gt 1 ]]; do
   case $1 in
   -p | --pages)
     max_pages="$2"
+    shift
+    ;;
+  -t | --tolernace)
+    tolerance="$2"
     shift
     ;;
   *)
@@ -74,7 +80,7 @@ for ((i = 1; i <= num_pages; i++)); do
   echo "check page $i"
   # difference in pixels, if 0 there are the same pictures
   # discard diff image
-  if ! compare -metric AE output/"$i"/1.png output/"$i"/2.png null: 2>&1; then
+  if ! magick compare -metric AE -fuzz $tolerance% output/"$i"/1.png output/"$i"/2.png null: 2>&1; then
     echo " pixels difference, not a scanned PDF, mismatch on page $i"
     exit 99
   fi
