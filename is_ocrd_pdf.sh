@@ -37,9 +37,6 @@ while [[ "$#" -gt 1 ]]; do
   shift
 done
 
-# increment to make it easier with page numbering
-max_pages=$((max_pages++))
-
 command_exists() {
   if ! [ -x $($(command -v $1 &>/dev/null)) ]; then
     echo $(error: $1 is not installed.) >&2
@@ -52,15 +49,16 @@ command_exists pdfinfo
 
 num_pages=$(pdfinfo "$1" | grep Pages | awk '{print $2}')
 
-echo $num_pages
-
-echo $max_pages
-
-if (((max_pages > 1) && (max_pages < num_pages))); then
+if ((max_pages > 0 && max_pages < num_pages)); then
   num_pages=$max_pages
 fi
 
+echo "check $num_pages pages"
+
 cd $(mktemp -d)
+
+# increment to make it easier with page numbering
+max_pages=$((max_pages++))
 
 for ((i = 1; i <= num_pages; i++)); do
   mkdir -p output/"$i" && echo "$i"
@@ -73,7 +71,7 @@ mutool convert -o output/%d/1.png tmp1.pdf 2>/dev/null
 mutool convert -o output/%d/2.png tmp2.pdf 2>/dev/null
 
 for ((i = 1; i <= num_pages; i++)); do
-  echo "$i"
+  echo "check page $i"
   # difference in pixels, if 0 there are the same pictures
   # discard diff image
   if ! compare -metric AE output/"$i"/1.png output/"$i"/2.png null: 2>&1; then
