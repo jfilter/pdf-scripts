@@ -51,7 +51,7 @@ Remove metadata with [exiftool](https://exiftool.org/).
 
 ### [is_ocrd_pdf.sh](./is_ocrd_pdf.sh)
 
-Detect OCRd PDFs. See also [sort_ocrd_pdfs.sh](sort_ocrd_pdfs.sh) to sort PDFs.
+Detect OCRd PDFs. See also [sort_ocrd_pdfs.sh](sort_by/sort_ocrd_pdfs.sh) to sort PDFs.
 
 ### [pipeline.sh](./pipeline.sh)
 
