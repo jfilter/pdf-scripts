@@ -80,7 +80,7 @@ for ((i = 1; i <= num_pages; i++)); do
   echo "check page $i"
   # difference in pixels, if 0 there are the same pictures
   # discard diff image
-  if ! magick compare -metric AE -fuzz $tolerance% output/"$i"/1.png output/"$i"/2.png null: 2>&1; then
+  if ! compare -metric AE -fuzz $tolerance% output/"$i"/1.png output/"$i"/2.png null: 2>&1; then
     echo " pixels difference, not a scanned PDF, mismatch on page $i"
     exit 99
   fi
