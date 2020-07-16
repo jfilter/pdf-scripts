@@ -29,5 +29,6 @@ fi
 if [ -f /etc/lsb-release ]; then
   # not sure, TODO
   apt-get update && apt-get install -y parallel ghostscript mupdf-tools qpdf poppler-utils detox libimage-exiftool-perl imagemagick
-  apt-get install -y containerd docker.io
+  # not sure about Docker installation
+  apt-get install -y docker-ce docker.io
 fi

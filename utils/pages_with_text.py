@@ -2,6 +2,8 @@ import argparse
 
 from pdflib import Document
 
+# TODO: use import `pdftotext`, pdflib is hard to install
+
 parser = argparse.ArgumentParser(
     description="checks for presence of absence of text on images"
 )

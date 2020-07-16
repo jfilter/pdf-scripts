@@ -16,6 +16,8 @@ set -x
 # https://ocrmypdf.readthedocs.io/en/latest/docker.html#adding-languages-to-the-docker-image
 # https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc#languages
 # eng - English, deu - German, spa - Spanish, fra - French, por - Portuguese, chi_sim - Chinese simplified
+# to use OCR with more than one language: -l deu+eng
+#
 #
 # Please report issues at https://github.com/jfilter/pdf-scripts/issues
 #

@@ -69,6 +69,7 @@ Bash is still the most-used shell. And the scipts comprise mostly of simple cond
 - https://0xacab.org/jvoisin/mat2
 - https://github.com/NicolasBernaerts/ubuntu-scripts/blob/master/pdf/pdf-repair
 - https://scantailor.org/ (unmantained)
+- [more tools for PDF in my blog post](https://johannesfilter.com/python-and-pdf-a-review-of-existing-tools/)
 
 ## Development
 
