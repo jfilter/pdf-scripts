@@ -13,7 +13,7 @@ set -e
 #
 # Arguments:
 #   -p or --pages: pos. integer, only consider first N pages
-#   -t or --tolernace: tolernace in % to consider pixels the same, defaults to 0
+#   -t or --tolernace: tolernace in % to consider pixels the same, defaults to 10%
 #
 # Please report issues at https://github.com/jfilter/pdf-scripts/issues
 #
@@ -23,7 +23,7 @@ set -e
 # parse arguments
 # h/t https://stackoverflow.com/a/33826763/4028896
 max_pages=-1
-tolerance=0
+tolerance=10
 # skip over positional argument of the file(s), thus -gt 1
 while [[ "$#" -gt 1 ]]; do
   case $1 in
