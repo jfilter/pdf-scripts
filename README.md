@@ -65,11 +65,8 @@ Bash is still the most-used shell. And the scipts comprise mostly of simple cond
 
 ## Related Work
 
-- https://dangerzone.rocks/
-- https://0xacab.org/jvoisin/mat2
-- https://github.com/NicolasBernaerts/ubuntu-scripts/blob/master/pdf/pdf-repair
-- https://scantailor.org/ (unmantained)
-- [more tools for PDF in my blog post](https://johannesfilter.com/python-and-pdf-a-review-of-existing-tools/)
+- https://github.com/NicolasBernaerts/ubuntu-scripts/blob/master/pdf/
+- [more tools for PDF processing in my blog post](https://johannesfilter.com/python-and-pdf-a-review-of-existing-tools/)
 
 ## Development
 
@@ -79,6 +76,23 @@ Bash is still the most-used shell. And the scipts comprise mostly of simple cond
 - should run on the major Unix-like OSs (Linux (e.g. Ubuntu), macOS)
 - format code with [shfmt](https://github.com/mvdan/sh#shfmt), e.g., extension for [VS Code](https://github.com/foxundermoon/vs-shell-format)
 - lint scripts with [shellcheck](https://github.com/koalaman/shellcheck), e.g., extension for [VS Code](https://github.com/timonwong/vscode-shellcheck)
+
+## Common Commands
+
+### Concat PDFs into one PDF
+```bash
+qpdf --empty --pages *.pdf -- out.pdf
+```
+
+### Images to PDF
+```bash
+convert *.jpg pictures.pdf
+```
+
+### Rotate PDFs
+```bash
+qpdf in.pdf  out.pdf --rotate=+90
+```
 
 ## License
 
