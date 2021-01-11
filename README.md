@@ -67,6 +67,7 @@ Bash is still the most-used shell. And the scipts comprise mostly of simple cond
 
 - https://github.com/NicolasBernaerts/ubuntu-scripts/blob/master/pdf/
 - [more tools for PDF processing in my blog post](https://johannesfilter.com/python-and-pdf-a-review-of-existing-tools/)
+- https://github.com/baltpeter/scanprep
 
 ## Development
 
