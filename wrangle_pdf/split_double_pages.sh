@@ -3,10 +3,6 @@ set -e
 
 # Automatically split up double pages to single pages by using the orientatio of each page
 
-# pdftk is unmainated, using pdft-java instead: https://gitlab.com/pdftk-java/pdftk
-# TODO: use qpdf instead of pdftk for manipulating the PDFs
-# qpdf input.pdf --pages . 1-10 -- output.pdf
-
 # extract page number and page width
 page_pattern="^Page[^[:digit:]]*([[:digit:]]+) size[^[:digit:]]*([[:digit:]]+).[[:digit:]]+[^[:digit:]]*([[:digit:]]+).[[:digit:]]+[^[:digit:]]*"
 
@@ -17,7 +13,7 @@ pdfinfo -f 1 -l $num_pages $1 | while read -r line; do
     pn=${BASH_REMATCH[1]}
     echo "working on page $pn"
 
-    pdftk $1 cat $pn output $1.tmp.$pn.pdf
+    qpdf $1 --pages . $pn -- $1.tmp.$pn.pdf
 
     # x or y depends, todo: programatically
     if [[ ${BASH_REMATCH[2]} -gt ${BASH_REMATCH[3]} ]]; then
@@ -37,5 +33,5 @@ for i in $(seq 1 $num_pages); do
 done
 
 echo "$files"
-pdftk $files cat output "$1".final.pdf &&
+qpdf --empty --pages $files -- "$1".final.pdf &&
   rm "$1".tmp.*.pdf
